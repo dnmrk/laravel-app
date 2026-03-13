@@ -43,13 +43,7 @@ Route::get('/', function () {
 });
 
 // show
-Route::get('/ideas/{id}', function ($id) {
-    $idea = Idea::findOrFail($id);
-
-    // if (is_null($idea)) {
-    //     abort(404);
-    // }
-
+Route::get('/ideas/{idea}', function (Idea $idea) {
     return view('ideas.show', [
         'idea' => $idea,
     ]);
