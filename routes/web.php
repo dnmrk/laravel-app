@@ -23,6 +23,7 @@ Route::get('/contact', function () {
     return view('contact');
 });
 
+// index
 Route::get('/', function () {
     // $ideas = session()->get('ideas', []);
 
@@ -36,8 +37,21 @@ Route::get('/', function () {
         })
         ->get();
 
-    return view('ideas', [
+    return view('ideas.index', [
         'ideas' => $ideas,
+    ]);
+});
+
+// show
+Route::get('/ideas/{id}', function ($id) {
+    $idea = Idea::findOrFail($id);
+
+    // if (is_null($idea)) {
+    //     abort(404);
+    // }
+
+    return view('ideas.show', [
+        'idea' => $idea,
     ]);
 });
 
@@ -54,7 +68,7 @@ Route::post('/ideas', function () {
 });
 
 Route::get('/delete-ideas', function () {
-    session()->forget('ideas');
+    Idea::truncate();
 
     return redirect('/');
 });
