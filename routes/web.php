@@ -24,9 +24,8 @@ Route::get('/contact', function () {
 });
 
 // index
-Route::get('/', function () {
+Route::get('/ideas', function () {
     // $ideas = session()->get('ideas', []);
-
     // $ideas = DB::table('ideas')->get();
     // $ideas = Idea::where('state', 'pending')->get();
     // $idea = Idea::find(1);
@@ -49,9 +48,24 @@ Route::get('/ideas/{idea}', function (Idea $idea) {
     ]);
 });
 
+// edit
+Route::get('/ideas/{idea}/edit', function (Idea $idea) {
+    return view('ideas.edit', [
+        'idea' => $idea,
+    ]);
+});
+
+Route::patch('/ideas/{idea}', function (Idea $idea) {
+    $idea->update([
+        'description' => request('description')
+    ]);
+    return redirect("/ideas/{$idea->id}");
+});
+
+// store
 Route::post('/ideas', function () {
     $idea = Idea::create([
-        'description' => request('idea'),
+        'description' => request('description'),
         'state' => 'pending',
     ]);
 
@@ -61,8 +75,9 @@ Route::post('/ideas', function () {
     return redirect('/');
 });
 
-Route::get('/delete-ideas', function () {
-    Idea::truncate();
+// destroy
+Route::delete('/ideas/{idea}', function (Idea $idea) {
+    $idea->delete();
 
-    return redirect('/');
+    return redirect('/ideas');
 });
