@@ -12,7 +12,15 @@ class IdeaController extends Controller
      */
     public function index()
     {
-        //
+        $ideas = Idea::query()
+            ->when(request('state'), function ($query, $state) {
+                $query->where('state', $state);
+            })
+            ->get();
+
+        return view('ideas.index', [
+            'ideas' => $ideas,
+        ]);
     }
 
     /**
@@ -20,7 +28,7 @@ class IdeaController extends Controller
      */
     public function create()
     {
-        //
+        return view('ideas.create');
     }
 
     /**
@@ -28,7 +36,19 @@ class IdeaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'description' => 'required|min:10',
+        ]);
+    
+        $idea = Idea::create([
+            'description' => request('description'),
+            'state' => 'pending',
+        ]);
+
+        // $idea = Request::input('idea');
+        // session()->push('ideas', $idea);
+
+        return redirect('/ideas');
     }
 
     /**
@@ -36,7 +56,9 @@ class IdeaController extends Controller
      */
     public function show(Idea $idea)
     {
-        //
+        return view('ideas.show', [
+            'idea' => $idea,
+        ]);
     }
 
     /**
@@ -44,7 +66,9 @@ class IdeaController extends Controller
      */
     public function edit(Idea $idea)
     {
-        //
+        return view('ideas.edit', [
+            'idea' => $idea,
+        ]);
     }
 
     /**
@@ -52,7 +76,10 @@ class IdeaController extends Controller
      */
     public function update(Request $request, Idea $idea)
     {
-        //
+        $idea->update([
+            'description' => request('description')
+        ]);
+        return redirect("/ideas/{$idea->id}");
     }
 
     /**
@@ -60,6 +87,8 @@ class IdeaController extends Controller
      */
     public function destroy(Idea $idea)
     {
-        //
+        $idea->delete();
+
+        return redirect('/ideas');
     }
 }
