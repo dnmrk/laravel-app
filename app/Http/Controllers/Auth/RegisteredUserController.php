@@ -11,7 +11,7 @@ use Illuminate\Validation\Rules\Password;
 
 class RegisteredUserController extends Controller
 {
-    public function register()
+    public function create()
     {
         return view('auth.register');
     }

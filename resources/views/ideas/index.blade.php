@@ -10,9 +10,8 @@
                 @endforeach
             </ul>
         </div>
-    @else
-        <p class="">You have no ideas yet.
-            <a class="underline" href="/ideas/create" class="text-indigo-500">Create one now!</a>
-        </p>
     @endif
+    <p class="mt-6">You have no ideas yet.
+        <a class="underline" href="/ideas/create" class="text-indigo-500">Create one now!</a>
+    </p>
 </x-layout>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\IdeaRequest;
 use App\Models\Idea;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class IdeaController extends Controller
 {
@@ -13,7 +14,9 @@ class IdeaController extends Controller
      */
     public function index()
     {
-        $ideas = Idea::query()
+        $ideas = Idea::query()->where([
+            'user_id' => Auth::id()
+        ])
             ->when(request('state'), function ($query, $state) {
                 $query->where('state', $state);
             })
@@ -40,6 +43,7 @@ class IdeaController extends Controller
         $idea = Idea::create([
             'description' => request('description'),
             'state' => 'pending',
+            'user_id' => Auth::id(),
         ]);
 
         // $idea = Request::input('idea');
