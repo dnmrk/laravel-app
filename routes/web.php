@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\SessionsController;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\IdeaController;
 use App\Http\Controllers\Auth\RegisteredUserController;
@@ -26,4 +27,9 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/login', [SessionsController::class, 'create'])->name('login');
     Route::post('/login', [SessionsController::class, 'store']);
+});
+
+Route::get('/admin', function () {
+    Gate::authorize('view-admin');
+    return 'Private admin only area';
 });
