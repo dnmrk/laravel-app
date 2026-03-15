@@ -6,6 +6,7 @@ use App\Http\Requests\IdeaRequest;
 use App\Models\Idea;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 /**
  * @property-read Collection<int, \App\Models\Idea> $ideas
@@ -48,6 +49,8 @@ class IdeaController extends Controller
      */
     public function show(Idea $idea)
     {
+        Gate::authorize('update', $idea);
+        
         return view('ideas.show', [
             'idea' => $idea,
         ]);
