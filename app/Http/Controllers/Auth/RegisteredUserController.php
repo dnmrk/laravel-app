@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
+
+class RegisteredUserController extends Controller
+{
+    public function register()
+    {
+        return view('auth.register');
+    }
+
+    public function store(Request $request)
+    {
+        // validate the request
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'max:255', 'unique:users'],
+            'password' => ['required', Password::default()]
+        ]);
+
+        // Create the use in the DB
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password)
+        ]);
+
+        // Log them in
+        Auth::login($user);
+
+        // redirect Home
+        return redirect('/ideas');
+    }
+}
