@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\IdeaRequest;
 use App\Models\Idea;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * @property-read Collection<int, \App\Models\Idea> $ideas
+ */
 class IdeaController extends Controller
 {
     /**
@@ -14,16 +17,8 @@ class IdeaController extends Controller
      */
     public function index()
     {
-        $ideas = Idea::query()->where([
-            'user_id' => Auth::id()
-        ])
-            ->when(request('state'), function ($query, $state) {
-                $query->where('state', $state);
-            })
-            ->get();
-
         return view('ideas.index', [
-            'ideas' => $ideas,
+            'ideas' => Auth::user()->ideas,
         ]);
     }
 
@@ -40,14 +35,10 @@ class IdeaController extends Controller
      */
     public function store(IdeaRequest $request)
     {
-        $idea = Idea::create([
+        Auth::user()->ideas()->create([
             'description' => request('description'),
-            'state' => 'pending',
-            'user_id' => Auth::id(),
+            'state' => 'pending'
         ]);
-
-        // $idea = Request::input('idea');
-        // session()->push('ideas', $idea);
 
         return redirect('/ideas');
     }
