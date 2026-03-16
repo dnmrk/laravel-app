@@ -1,13 +1,13 @@
 <?php
 
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\SessionsController;
+use App\Http\Controllers\IdeaController;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\IdeaController;
-use App\Http\Controllers\Auth\RegisteredUserController;
 
 Route::get('/', function () {
-    return 'Placeholder for home page.';
+    return 'Welcome to the home page.';
 });
 
 Route::middleware('auth')->group(function () {
@@ -31,5 +31,6 @@ Route::middleware('guest')->group(function () {
 
 Route::get('/admin', function () {
     Gate::authorize('view-admin');
+
     return 'Private admin only area';
 });

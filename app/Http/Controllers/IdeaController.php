@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 /**
- * @property-read Collection<int, \App\Models\Idea> $ideas
+ * @property-read Collection<int, Idea> $ideas
  */
 class IdeaController extends Controller
 {
@@ -40,7 +40,7 @@ class IdeaController extends Controller
     {
         $idea = Auth::user()->ideas()->create([
             'description' => request('description'),
-            'state' => 'pending'
+            'state' => 'pending',
         ]);
 
         // notify the user
@@ -55,6 +55,7 @@ class IdeaController extends Controller
     public function show(Idea $idea)
     {
         Gate::authorize('update', $idea);
+
         // Auth::user()->cannot('update', $idea);
         return view('ideas.show', [
             'idea' => $idea,
@@ -77,8 +78,9 @@ class IdeaController extends Controller
     public function update(IdeaRequest $request, Idea $idea)
     {
         $idea->update([
-            'description' => request('description')
+            'description' => request('description'),
         ]);
+
         return redirect("/ideas/{$idea->id}");
     }
 

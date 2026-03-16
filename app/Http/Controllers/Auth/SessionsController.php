@@ -9,7 +9,6 @@ use Illuminate\Validation\Rules\Password;
 
 class SessionsController extends Controller
 {
-
     /**
      * Show the form for creating a new resource.
      */
@@ -26,18 +25,18 @@ class SessionsController extends Controller
         // validate
         $validated = $request->validate([
             'email' => ['required', 'string', 'email', 'max:255'],
-            'password' => ['required', 'string', Password::default()]
+            'password' => ['required', 'string', Password::default()],
         ]);
 
         // attemp to login
         if (Auth::attempt($validated)) {
             $request->session()->regenerate();
-            
+
             return redirect('/ideas');
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our reports.'
+            'email' => 'The provided credentials do not match our reports.',
         ]);
     }
 
