@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\IdeaRequest;
 use App\Models\Idea;
+use App\Notifications\IdeaPublished;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -37,10 +38,13 @@ class IdeaController extends Controller
      */
     public function store(IdeaRequest $request)
     {
-        Auth::user()->ideas()->create([
+        $idea = Auth::user()->ideas()->create([
             'description' => request('description'),
             'state' => 'pending'
         ]);
+
+        // notify the user
+        Auth::user()->notify(new IdeaPublished($idea));
 
         return redirect('/ideas');
     }
